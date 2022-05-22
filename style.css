@@ -10,6 +10,9 @@ body {
 
 button {
 	cursor: pointer;
+	align-self: center;
+	padding: .5rem;
+	margin: 1rem;
 }
 
 canvas {
