@@ -2,10 +2,21 @@ html, body {
 	margin: 0;
 }
 
+body {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+button {
+	cursor: pointer;
+}
+
 canvas {
-	width: 100vmin;
+	flex: 1;
+	aspect-ratio: 1;
+	height: 1;
 	object-fit: contain;
-	/* box-shadow: inset 0 0 0 1px red; */
 }
 
 p {

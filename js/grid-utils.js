@@ -1,12 +1,12 @@
 
-export function addObstacle(matrix, exclusions, [min, max] = [1, 100]) {
+export function addObstacle(matrix, exclusions, [min, max] = [1, 100], random) {
 	const start = {}
 	const end = {}
 	do {
-		start.x = randomIndexX(matrix.i)
-		start.y = randomIndexY(matrix.j, start.x)
-		end.x = randomIndexX(matrix.i)
-		end.y = randomIndexY(matrix.j, end.x)
+		start.x = randomIndexX(random, matrix.i)
+		start.y = randomIndexY(random, matrix.j, start.x)
+		end.x = randomIndexX(random, matrix.i)
+		end.y = randomIndexY(random, matrix.j, end.x)
 	} while (
 		areaAsCell(start, end) < min
 		|| areaAsCell(start, end) > max
@@ -30,14 +30,14 @@ export function addObstacle(matrix, exclusions, [min, max] = [1, 100]) {
 }
 
 /** @param {import('./hex-structures.js').HexGrid} matrix */
-export function setStartEnd(matrix) {
+export function setStartEnd(matrix, random) {
 	const start = {}
 	const end = {}
 	do {
-		start.x = randomIndexX(matrix.i)
-		start.y = randomIndexY(matrix.j, start.x)
-		end.x = randomIndexX(matrix.i)
-		end.y = randomIndexY(matrix.j, end.x)
+		start.x = randomIndexX(random, matrix.i)
+		start.y = randomIndexY(random, matrix.j, start.x)
+		end.x = randomIndexX(random, matrix.i)
+		end.y = randomIndexY(random, matrix.j, end.x)
 	} while (distance(start, end) < 20)
 
 	const startCell = matrix[start.x][start.y]
@@ -52,14 +52,14 @@ export function setStartEnd(matrix) {
 }
 
 /** @param {number} max */
-function randomIndexX(max) {
-	return Math.floor(Math.random() * max * 2) / 2;
+function randomIndexX(random = Math.random, max) {
+	return Math.floor(random() * max * 2) / 2;
 }
 
-function randomIndexY(_max, x) {
+function randomIndexY(random = Math.random, _max, x) {
 	const even = !(x % 1)
 	const max = even ? _max : _max - 1;
-	return Math.floor(Math.random() * max) + (even ? 0 : 0.5);
+	return Math.floor(random() * max) + (even ? 0 : 0.5);
 }
 
 function xDistance(a, b) {
