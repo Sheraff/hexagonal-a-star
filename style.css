@@ -1,6 +1,11 @@
 html, body {
 	margin: 0;
-	background: black;
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background: black;
+	}
 }
 
 body {
