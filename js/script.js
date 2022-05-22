@@ -2,12 +2,12 @@ const button = document.querySelector('button');
 button.addEventListener('click', () => onSeed(generateSeed()))
 
 const canvas = document.querySelector("canvas");
-const side = Math.min(window.innerHeight, window.innerWidth) * window.devicePixelRatio;
-canvas.height = side;
-canvas.width = side;
+const side = Math.min(window.innerHeight, window.innerWidth);
+canvas.height = side * window.devicePixelRatio;
+canvas.width = side * window.devicePixelRatio;
 const worker = new Worker("js/canvas.js", { type: "module" });
 const offscreen = canvas.transferControlToOffscreen();
-worker.postMessage({canvas: offscreen}, [offscreen]);
+worker.postMessage({side, canvas: offscreen}, [offscreen]);
 
 const url = new URL(location.href)
 let seed = url.searchParams.get("seed") || generateSeed();

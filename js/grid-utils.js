@@ -11,7 +11,9 @@ export function addObstacle(matrix, exclusions, [min, max] = [1, 100], random) {
 		areaAsCell(start, end) < min
 		|| areaAsCell(start, end) > max
 		|| Math.abs(start.y - end.y) <= 1
-		|| Math.abs(start.x - end.x) <= 1
+		|| Math.abs(start.x - end.x) <= 0.5
+		|| Math.abs(start.y - end.y) / Math.abs(start.x - end.x) < 0.3
+		|| Math.abs(start.x - end.x) / Math.abs(start.y - end.y) < 0.3
 		|| exclusions.find(cell => 
 			cell.x >= Math.min(start.x, end.x)
 			&& cell.x <= Math.max(start.x, end.x)
@@ -30,7 +32,7 @@ export function addObstacle(matrix, exclusions, [min, max] = [1, 100], random) {
 }
 
 /** @param {import('./hex-structures.js').HexGrid} matrix */
-export function setStartEnd(matrix, random) {
+export function setStartEnd(matrix, random, spacing) {
 	const start = {}
 	const end = {}
 	do {
@@ -39,7 +41,7 @@ export function setStartEnd(matrix, random) {
 		end.x = randomIndexX(random, matrix.i)
 		end.y = randomIndexY(random, matrix.j, end.x)
 	} while (
-		distance(start, end) < 90
+		distance(start, end) < spacing
 		// conditions below are a coping mechanism, it'd be better to check my math
 		|| !matrix[start.x]
 		|| !matrix[start.x][start.y]

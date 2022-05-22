@@ -53,11 +53,14 @@ function styleCell(context, cell) {
 	}
 }
 
+const xOffset = 1 + Math.cos(HEX_SIDE)
+const yOffset = Math.sin(HEX_SIDE)
+
 function drawHexagon(context, xIndex, yIndex, r) {
-	const x = xIndex * r * 2 * (1 + Math.cos(HEX_SIDE)) + r
-	const y = (yIndex + 0.5) * r * 2 * Math.sin(HEX_SIDE)
+	const x = r * (1 + xIndex * 2 * xOffset)
+	const y = r * (1 + yIndex * 2 * yOffset)
 	context.beginPath();
-	for (var i = 0; i < 6; i++) {
+	for (let i = 0; i < 6; i++) {
 		const rad = i * HEX_SIDE;
 		context.lineTo(x + r * Math.cos(rad), y + r * Math.sin(rad));
 	}
