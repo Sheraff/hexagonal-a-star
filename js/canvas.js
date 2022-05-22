@@ -5,20 +5,22 @@ import seededRandom from './seeded-ramdom.js'
 import aStar from './a-star.js'
 
 let context
+let killCurrentAnimation
 
 onmessage = async function({data}) {
 	if (data.canvas) {
 		context = data.canvas.getContext("2d");
 	}
 	if(context && data.seed) {
+		killCurrentAnimation?.()
 		const {matrix, start, end} = makeGrid(data.seed)
 		await nextFrame()
 		drawMatrix(context, matrix)
 		await nextFrame()
 		const path = aStar(matrix, start, end);
-		await wait(600)
+		await wait(400)
 		if (path) {
-			animatePath(context, matrix, path)
+			killCurrentAnimation = animatePath(context, matrix, path)
 		}
 	}
 };
@@ -33,12 +35,20 @@ function makeGrid(seed) {
 	return {matrix, start, end}
 }
 
-async function animatePath(context, matrix, path) {
-	for (const cell of path) {
-		cell.isPath = true
-		await wait(30)
-		await nextFrame()
-		drawCell(context, matrix, cell)
+function animatePath(context, matrix, path) {
+	let kill = false
+	void async function () {
+		for (const cell of path) {
+			cell.isPath = true
+			await wait(30)
+			await nextFrame()
+			if(kill)
+				return
+			drawCell(context, matrix, cell)
+		}
+	}()
+	return () => {
+		kill = true
 	}
 }
 
