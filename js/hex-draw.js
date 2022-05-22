@@ -32,19 +32,24 @@ function getCellRadius(context, matrix){
 function styleCell(context, cell) {
 	switch(true) {
 		case cell.isStart:
-			context.fillStyle = "green";
+			context.fillStyle = "limegreen";
+			context.strokeStyle = "darkgrey"
 			break;
 		case cell.isEnd:
-			context.fillStyle = "purple";
+			context.fillStyle = "deeppink";
+			context.strokeStyle = "darkgrey"
 			break;
 		case cell.isObstacle:
 			context.fillStyle = "black";
+			context.strokeStyle = "black"
 			break;
 		case cell.isPath:
 			context.fillStyle = "red";
+			context.strokeStyle = "red"
 			break;
 		default:
 			context.fillStyle = "lightgrey";
+			context.strokeStyle = "darkgrey"
 	}
 }
 
