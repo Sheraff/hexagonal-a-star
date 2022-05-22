@@ -39,7 +39,7 @@ export function setStartEnd(matrix, random) {
 		end.x = randomIndexX(random, matrix.i)
 		end.y = randomIndexY(random, matrix.j, end.x)
 	} while (
-		distance(start, end) < 20
+		distance(start, end) < 90
 		// conditions below are a coping mechanism, it'd be better to check my math
 		|| !matrix[start.x]
 		|| !matrix[start.x][start.y]
