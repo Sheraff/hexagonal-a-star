@@ -38,7 +38,14 @@ export function setStartEnd(matrix, random) {
 		start.y = randomIndexY(random, matrix.j, start.x)
 		end.x = randomIndexX(random, matrix.i)
 		end.y = randomIndexY(random, matrix.j, end.x)
-	} while (distance(start, end) < 20)
+	} while (
+		distance(start, end) < 20
+		// conditions below are a coping mechanism, it'd be better to check my math
+		|| !matrix[start.x]
+		|| !matrix[start.x][start.y]
+		|| !matrix[end.x]
+		|| !matrix[end.x][end.y]
+	)
 
 	const startCell = matrix[start.x][start.y]
 	startCell.isStart = true
