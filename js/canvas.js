@@ -3,27 +3,56 @@ import { drawMatrix, drawCell } from './hex-draw.js'
 import { setStartEnd, addObstacle } from './grid-utils.js'
 import seededRandom from './seeded-ramdom.js'
 import aStar from './a-star.js'
+import interrupt from './interruptable-async-generator-function.js'
 
-let context
-let killCurrentAnimation
 
-onmessage = async function({data}) {
-	if (data.canvas) {
-		context = data.canvas.getContext("2d");
-	}
-	if(context && data.seed) {
-		killCurrentAnimation?.()
-		const {matrix, start, end} = makeGrid(data.seed)
+{
+	let context
+	let killCurrentAnimation
+	onmessage = async function({data}) {
+		if (data.canvas) {
+			context = data.canvas.getContext("2d");
+		}
+		if(context && data.seed) {
+			killCurrentAnimation?.()
+			killCurrentAnimation = startWithSeed(context, data.seed)
+		}
+	};
+}
+
+function startWithSeed(context, seed) {
+	let killChild
+	const kill = interrupt(async function* () {
+		const {matrix, start, end} = makeGrid(seed)
 		await nextFrame()
+		yield
 		drawMatrix(context, matrix)
 		await nextFrame()
 		const path = aStar(matrix, start, end);
+		yield
 		await wait(400)
+		yield
 		if (path) {
-			killCurrentAnimation = animatePath(context, matrix, path)
+			killChild = animatePath(context, matrix, path)
 		}
+	})
+	return () => {
+		kill()
+		killChild?.()
 	}
-};
+}
+
+function animatePath(context, matrix, path) {
+	return interrupt(async function* () {
+		for (const cell of path) {
+			cell.isPath = true
+			await wait(30)
+			await nextFrame()
+			yield
+			drawCell(context, matrix, cell)
+		}
+	})
+}
 
 function makeGrid(seed) {
 	const random = seed ? seededRandom(seed) : undefined
@@ -33,23 +62,6 @@ function makeGrid(seed) {
 		addObstacle(matrix, [start, end], [10, 150], random)
 	}
 	return {matrix, start, end}
-}
-
-function animatePath(context, matrix, path) {
-	let kill = false
-	void async function () {
-		for (const cell of path) {
-			cell.isPath = true
-			await wait(30)
-			await nextFrame()
-			if(kill)
-				return
-			drawCell(context, matrix, cell)
-		}
-	}()
-	return () => {
-		kill = true
-	}
 }
 
 function wait(ms) {
