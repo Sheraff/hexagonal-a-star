@@ -3,10 +3,10 @@ export function addObstacle(matrix, exclusions, [min, max] = [1, 100], random) {
 	const start = {}
 	const end = {}
 	do {
-		start.x = randomIndexX(random, matrix.i)
-		start.y = randomIndexY(random, matrix.j, start.x)
-		end.x = randomIndexX(random, matrix.i)
-		end.y = randomIndexY(random, matrix.j, end.x)
+		start.x = randomIndexX(random, matrix.i + 2) - 1
+		start.y = randomIndexY(random, matrix.j + 2, start.x) - 1
+		end.x = randomIndexX(random, matrix.i + 2) - 1
+		end.y = randomIndexY(random, matrix.j + 2, end.x) - 1
 	} while (
 		areaAsCell(start, end) < min
 		|| areaAsCell(start, end) > max
@@ -24,7 +24,7 @@ export function addObstacle(matrix, exclusions, [min, max] = [1, 100], random) {
 
 	for(let x = Math.min(start.x, end.x); x < Math.max(start.x, end.x); x += 0.5) {
 		for(let y = Math.min(start.y, end.y); y < Math.max(start.y, end.y); y += 0.5) {
-			if(matrix[x][y]) {
+			if(matrix[x] && matrix[x][y]) {
 				matrix[x][y].isObstacle = true
 			}
 		}
@@ -42,6 +42,8 @@ export function setStartEnd(matrix, random, spacing) {
 		end.y = randomIndexY(random, matrix.j, end.x)
 	} while (
 		distance(start, end) < spacing
+		|| Math.abs(start.y - end.y) <= matrix.j / 3
+		|| Math.abs(start.x - end.x) <= matrix.i / 3
 		// conditions below are a coping mechanism, it'd be better to check my math
 		|| !matrix[start.x]
 		|| !matrix[start.x][start.y]

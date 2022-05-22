@@ -89,8 +89,8 @@ function makeGrid(random, side) {
 function makeParams(side){
 	const x = Math.round(side / 20)
 	const y = x + Math.round((x + x * Math.cos(2 * Math.PI / 6) - Math.cos(2 * Math.PI / 6)) / 2) - 2
-	const distance = (x + y) * 0.5
-	const obstacleCount = Math.round(x * y) / 90
+	const distance = (x + y) * 0.3
+	const obstacleCount = Math.round(x * y / 60)
 	const obstacleSize = [
 		Math.floor(x * y / 300),
 		Math.ceil(x * y / 20),
